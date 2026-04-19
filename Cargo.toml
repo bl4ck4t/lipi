@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "lipi-contracts",
+    "lipi-server",
+    "lipi-cli"
+]
