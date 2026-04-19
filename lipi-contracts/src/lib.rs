@@ -1,14 +1,33 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+use serde::{Serialize, Deserialize};
+use uuid::Uuid;
+use chrono::{DateTime, Utc};
+
+#[derive(Serialize, Deserialize)]
+pub struct LogEntry {
+    pub id: Uuid,
+    pub timestamp: DateTime<Utc>,
+    pub source: LogSource,
+    pub content: String,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[derive(Serialize, Deserialize)]
+pub enum LogSource {
+    Manual,
+    Git,
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[derive(Serialize, Deserialize)]
+pub struct LogRequest {
+    pub thread_id: Uuid,
+    pub log: LogEntry,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct GenerateRequest {
+    pub thread_id: Uuid,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct GenerateResponse {
+    pub output: String,
 }
