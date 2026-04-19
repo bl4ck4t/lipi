@@ -1,12 +1,16 @@
-use axum::Json;
-use lipi_contracts::LogRequest;
+use axum::{Json, extract::State};
+use std::sync::Arc;
 
-pub async fn ingest_log(Json(payload): Json<LogRequest>) -> &'static str {
-    println!(
-        "[LOG] thread_id={} content={}",
-        payload.thread_id,
-        payload.log.content
-    );
+use lipi_contracts::LogRequest;
+use crate::domain::KnowledgeEngine;
+
+pub async fn ingest_log(
+    State(engine): State<Arc<dyn KnowledgeEngine>>,
+    Json(payload): Json<LogRequest>,
+) -> &'static str {
+    engine
+        .store_log(payload.thread_id, payload.log)
+        .await;
 
     "ok"
 }
